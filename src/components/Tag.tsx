@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useOptionsStore } from "@/store/useOptionsStore";
+import { SuggestionProps } from "@/types/inputProps";
 
-interface TagProps {
-    item: {
-        tag: string;
-        category: string;
-        name: string
-    };
-};
-
-const Tag: React.FC<TagProps> = ({ item }) => {
+const Tag = ({
+    category,
+    name,
+    value,
+    id
+}: SuggestionProps) => {
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const { categoryOptions, fetchCategoryOptions } = useOptionsStore();
 
@@ -19,12 +17,12 @@ const Tag: React.FC<TagProps> = ({ item }) => {
 
     useEffect(() => {
         if (isDropdownVisible) {
-            fetchCategoryOptions(item.category);
+            fetchCategoryOptions(category);
         }
-    }, [isDropdownVisible, item.category, fetchCategoryOptions]);
+    }, [isDropdownVisible, category, fetchCategoryOptions]);
 
-    const handleSelect = (value: string) => {
-        item.tag = value;
+    const handleSelect = (newValue: string) => {
+        value = newValue;
         setIsDropdownVisible(false);
     };
 
@@ -35,7 +33,7 @@ const Tag: React.FC<TagProps> = ({ item }) => {
                 type="button"
                 onClick={toggleDropdown}
             >
-                {item.tag}
+                {value}
             </button>
 
             {isDropdownVisible && categoryOptions.length > 0 && (

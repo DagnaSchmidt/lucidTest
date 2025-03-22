@@ -3,13 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 import { useFormulaStore } from "@/store/useFormulaStore";
 import { useAutocomplete } from "@/hooks/useAutocomplete";
+import { SuggestionProps } from "@/types/inputProps";
 
 import Tag from "./Tag";
 
 const Input = () => {
     const { formula, setFormula } = useFormulaStore();
     const [inputValue, setInputValue] = useState("");
-    const [displayValue, setDisplayValue] = useState<(string | { tag: string, category: string, name: string })[]>([]);
+    const [displayValue, setDisplayValue] = useState<(string | SuggestionProps)[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
     const { data: suggestions } = useAutocomplete(inputValue);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -38,12 +39,12 @@ const Input = () => {
         }
     };
 
-    const handleAutocompleteClick = (suggestion: any) => {
+    const handleAutocompleteClick = (suggestion: SuggestionProps) => {
         const lastWord = getLastWord(inputValue);
         const textBeforeLastWord = inputValue.substring(0, inputValue.lastIndexOf(lastWord)).trim();
 
-        let updatedDisplay = [...displayValue];
-        let updatedFormula = [...formula];
+        const updatedDisplay = [...displayValue];
+        const updatedFormula = [...formula];
 
         if (textBeforeLastWord) {
             updatedDisplay.push(textBeforeLastWord);
@@ -51,11 +52,14 @@ const Input = () => {
         }
 
         updatedDisplay.push({
-            tag: suggestion.value,
+            value: suggestion.value,
             category: suggestion.category,
-            name: suggestion.name
+            name: suggestion.name,
+            id: suggestion.id
         });
-        updatedFormula.push(suggestion.value);
+
+        const newString = suggestion.value.toString();
+        updatedFormula.push(newString);
 
         setDisplayValue(updatedDisplay);
         setFormula(updatedFormula);
@@ -71,7 +75,7 @@ const Input = () => {
                     typeof item === "string" ? (
                         <span key={index} className="text-gray-700">{item}</span>
                     ) : (
-                        <Tag key={index} item={item} />
+                        <Tag key={index} {...item} />
                     )
                 )}
 
@@ -87,7 +91,7 @@ const Input = () => {
 
             {isDropdownVisible && suggestions?.length > 0 && (
                 <div className="border p-2 mt-2 bg-white shadow-lg rounded-md">
-                    {(suggestions ?? []).map((s: any) => (
+                    {(suggestions ?? []).map((s: SuggestionProps) => (
                         <div
                             key={s.id}
                             className="p-2 cursor-pointer hover:bg-blue-100 rounded-md transition"
