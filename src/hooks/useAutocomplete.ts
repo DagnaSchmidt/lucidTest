@@ -1,3 +1,4 @@
+import { SuggestionProps } from "@/types/inputProps";
 import { useQuery } from "@tanstack/react-query";
 
 const fetchAutocomplete = async (query: string) => {
@@ -9,7 +10,7 @@ const fetchAutocomplete = async (query: string) => {
 
     const data = await res.json();
 
-    return data.filter((item: any) =>
+    return data.filter((item: SuggestionProps) =>
         item.name.toLowerCase().includes(query.toLowerCase())
     );
 };

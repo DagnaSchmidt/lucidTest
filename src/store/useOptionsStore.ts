@@ -1,3 +1,4 @@
+import { SuggestionProps } from "@/types/inputProps";
 import { create } from "zustand";
 
 interface Option {
@@ -24,7 +25,7 @@ export const useOptionsStore = create<OptionsState>((set) => ({
         };
         const data = await res.json();
         const filteredOptions = data.filter(
-            (item: any) => item.category === category
+            (item: SuggestionProps) => item.category === category
         );
         set({ categoryOptions: filteredOptions });
     },

@@ -4,9 +4,7 @@ import { SuggestionProps } from "@/types/inputProps";
 
 const Tag = ({
     category,
-    name,
-    value,
-    id
+    value
 }: SuggestionProps) => {
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const { categoryOptions, fetchCategoryOptions } = useOptionsStore();
