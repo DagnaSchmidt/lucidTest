@@ -72,7 +72,6 @@ const Input = () => {
                         <span key={index} className="text-gray-700">{item}</span>
                     ) : (
                         <Tag key={index} item={item} />
-                        // <Tag key={index} item={item.tag} />
                     )
                 )}
 
